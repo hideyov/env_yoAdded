@@ -50,6 +50,8 @@ $ which ndenv --> /Users/hideyo_pr/.ndenv/bin/ndenv
 
 このままでもndenvコマンドは使用できるが、肝心な、Node.jsをインストールする ndenv install コマンドが使用できないので、ndenv installを使用するためのプラグイン node-buildをインストール。まずはリポジトリをクローン。
 
+$ git clone https://github.com/riywo/node-build.git $(ndenv root)/plugins/node-build
+
 $ git clone https://github.com/riywo/node-build.git /Users/hideyo_pr/.ndenv/plugins/node-build
 
 ※ $(ndenv root) が展開されて /Users/hideyo_pr/.ndenv （おそらく）
