@@ -24,6 +24,8 @@ $ which gulp --> /usr/local/bin/gulp
 
 ## Node.jsのバージョン管理ツールndenvをインストール
 
+※ 順序が逆になった。すでにhomebrewでインストールしていたNode.jsを、ここでアンインストールしておくべきだろうと思われる
+
 https://qiita.com/noraworld/items/462689e108c10102d51f
 
 ndenv を使用して複数のバージョンの Node.js を管理する方法と基本的な使い方
