@@ -1,0 +1,30 @@
+
+https://www.vagrantup.com/downloads.html
+macOS用のvagrant をダウンロード
+
+vagrant_2.2.2_x86_64.dmg
+
+macのターミナルの設定
+　コンピュータ名が長ったらしくて変更する時は、システム環境設定→共有で変更する hideyo_pr:~@mpro$ (@以下が変わる)
+ 
+#05[構築作業の流れを図で確認] 
+サーバー一つにつき、一つのフォルダが必要。
+MyVagrantフォルダを作成し、MyCentOSフォルダetcを作って複数サーバーを管理する。
+サーバーの設定ファイル、Vagrantfile を各サーバーごとに。
+IPアドレスを設定。 192.168.33.10 / 192.168.33.11
+
+#6[仮想マシンを立ち上げよう]
+最初に、vagrantの便利なプラグインを導入。
+vagrant plugin install vagrant-vbguest
+
+Installed the plugin 'vagrant-vbguest (0.17.1)'!
+
+*********
+vagrant up でエラー！
+
+2015/12/25
+
+Vagrant と　VirtualBoxのバージョンによる相性がある？？？？
+
+いったん、ここはvagrantによる環境構築は、潔く挫折しておく！！！
+
