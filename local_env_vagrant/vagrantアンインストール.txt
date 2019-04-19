@@ -11,3 +11,16 @@ root/Applications/Vagrant
 
 ディレクトリ削除時のコマンドは、「rm -r -d -f ディレクトリ名」で、配下のファイルも含め強制的に削除する。
 
+190419 
+
+Vagrant環境構築に再挑戦。まずは現状確認。
+$ vagrant -v => Vagrant 1.9.0
+
+vagrant完全アンインストールするため、保存場所を確認。
+本体は /opt/vagrant/bin/vagrant にあり、/usr/local/bin/vagrant からシンボリックリンクが張られている。
+隠しファイルが、 .vagrant.d/ niaru.
+
+/usr/local/bin/vagrant (symbolic link) -> /opt/vagrant/bin/vagrant
+/opt/vagrant/bin/vagrant
+/Users/hideyo_pr/.vagrant.d/
+
