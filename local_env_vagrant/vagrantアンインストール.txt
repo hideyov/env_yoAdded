@@ -6,8 +6,10 @@ https://qiita.com/silva114jp/items/6e1e64e9aeaca62b1c04
 root/Applications/Vagrant
 /usr/bin/vagrant
 /usr/local/bin/vagrant
-/Users/ユーザ名/.vagrant.d※隠しディレクトリ
+/Users/ユーザ名/.vagrant.d  
 /opt/vagrant
+
+※隠しディレクトリ .vagrant.d は、Vagrantfile が作成された後に、ホームディレクトリに作られる（ようだ。vagrant インストール直後は存在しないので）  
 
 ディレクトリ削除時のコマンドは、「rm -r -d -f ディレクトリ名」で、配下のファイルも含め強制的に削除する。
 

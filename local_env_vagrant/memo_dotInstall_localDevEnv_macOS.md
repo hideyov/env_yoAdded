@@ -56,11 +56,25 @@ vagrant init bento/centos-6.8 ：仮想マシンの設定をする Vagrantfile �
 
 "A `Vagrantfile` has been placed in this directory. You are now ready to `vagrant up` your first virtual environment! Please read the comments in the Vagrantfile as well as documentation on `vagrantup.com` for more information on using Vagrant."
 
+Vagrantfile が作成されると以上のメッセージが出る。そして、ホームディレクトリに、 .vagrant.d/ という隠しフォルダが作られる。
+
 Vagrantfileを編集して仮想マシンのIPアドレスを192.168.33.10にする
 
 sed -i '' -e 's/# config.vm.network "private_network", ip: "192.168.33.10"/config.vm.network "private_network", ip: "192.168.33.10"/' Vagrantfile
 
-[question ???] IPアドレスの設定がファイル内のどこに反映されたのか、よくわからない。 
+上記スクリプトにより、Vagrantfile の35行目の部分が下記のようにコメントアウトされる。
+
+config.vm.network "private_network", ip: "192.168.33.10"
+
+### 仮想マシンを起動
+
+$ vagrant up ：このコマンドにより、裏でvirturalBox が動いて仮装マシーンを起動する。（だいたい5分ぐらいの感じ）
+
+==> default: Successfully added box 'bento/centos-6.8' (v2.3.4) for 'virtualbox'!
+
+などと表示されて間もなく成功！（サーバーが立ち上がった）
+
+$ vagrant status >> running (virtualbox) 
 
 ### ユーザーからの質問 - CentOS 7 はサポート対象外（この講座では）
 
@@ -80,11 +94,11 @@ $ clear でターミナルの画面をクリア。
 
 Vagrantfile のあるフォルダで vagrant ssh => 立ち上げたサーバーにログイン
 
-サーバーにログインすると、コマンド入力部分が [vagrant@localhost ~]$ に変わる。 vagrant から始まれば、仮装マシーンのサーバーにログインしていることになる。 自分が今Macを操作しているのか、それとも仮装マシーンを操作しているのかは、ここで判別できる。
+サーバーにログインすると、コマンド入力部分が [vagrant@localhost ~]$ に変わる。vagrant から始まれば、仮装マシーンのサーバーにログインしていることになる。自分が今Macを操作しているのか、それとも仮装マシーンを操作しているのかは、ここで判別できる。
 
 サーバーが立ち上がって、OSがインストールされているが、まだPHPやRubyなどのアプリケーションがインストールされていない。こちらでよく使いそうなアプリケーションを自動でインストールするためのスクリプト ./run.sh を用意しておきました。
 
-[vagrant@localhost ~]$ sudo yum -y update ：OSを最新状態にアップデート（時間かかる）
+[vagrant@localhost ~]$ sudo yum -y update ：OSを最新状態にアップデート（時間かかる。10分ぐらいの感じ）
 
 [vagrant@localhost ~]$ sudo yum -y install git ：スクリプトを入手するための gitをインストール
 
@@ -94,7 +108,7 @@ Vagrantfile のあるフォルダで vagrant ssh => 立ち上げたサーバー�
 
 ネットワーク状況によっては、途中で止まったように見えることもある。エラーのようなものが出ても、taskが終了していればOK。
 
-[vagrant... ~]$ exec $SHELL -1 ：最後に、もろもろの設定を反映させる。
+[vagrant... ~]$ exec $SHELL -l ：最後に、もろもろの設定を反映させる。(-1ではない。エル)
 
 ### ./run.sh では具体的に何がインストールされているのか（ユーザーからの質問）
 
@@ -112,5 +126,52 @@ Cyberduck は Vagrant や VirtualBox と違ってインストーラーが付属�
 
 $ Cyberduck >>> -bash: Cyberduck: command not found （講座ではターミナルから Cyberduck で起動できると言うが。。。alias設定しないと無理だな）
 
-!!!
-Cyberduck の設定の前まで
+### Cyberduck の設定
+
+環境設定[cmd + ,] > [ブラウザ] >>> ['.'で始まるファイルを表示、ダブルクリックしたファイルを外部エディターで開く]にチェック
+
+外部エディターなども設定し、再起動
+
+### 仮想マシンにアクセス
+
+cyberduckを起動 > [新規接続] 
+
+転送プロトコル：SFTP（SSHによる暗号化FTP）/ サーバ名：[192.168.33.10 (今回設定した)] 
+
+ユーザ名とパスワード：ともに vagrant （Vagrantで立ち上げたサーバーには、小文字の vagrant ユーザーが作られ、パスワードも同じ）
+
+「キーチェーンに追加する」にチェック > 接続 > 
+
+「そのホストは現在システムに認識されていません」と出るが、ここで「許可」とすると仮想マシンに接続することができる。「常に」にチェックを忘れずに入れておきましょう。
+
+接続に成功すると、カレントディレクトリが /home/vagrant と表示される。
+
+同時に、$ ~/MyVagrant/MyCentOS に移動して $ vagrant ssh でログイン後に [vagrant@localhost ~]$ pwd => /home/vagrant
+
+つまり、home フォルダの下の vagrant フォルダが、vagrant ユーザのホームフォルダになる。[!!! caution]
+
+後でアクセスしやすいように今の接続を Cyberduck のブックマークに入れておく。[新規ブックマーク] 
+
+### PHPの学習をしてみる
+
+ホームディレクトリ /home/vagrant に php_lessons フォルダを作成。index.php に <?php echo "Hello!" 
+
+この命令をブラウザで実行するためには、ターミナルから「ウェブサーバー」を立ち上げる必要がある。PHPのビルトイン・サーバーで確認する。
+
+[vagrant@localhost php_lessons]$ php -S 192.168.33.10:8000 => PHPが用意しているウェブサーバーが起動
+
+Listening on http://192.168.33.10:8000 と出るので、ブラウザにURLを貼って確認。停止は ctrl + c
+
+### 仮想マシンからログアウト(exit)してから停止(vagrant suspend)
+
+ブラウザ、ファイル転送ツール(Cyberduck)、立ち上げたエディターは、そのまま終了させて大丈夫。
+
+ターミナルでPHPのウェブサーバーが立ち上がっていれば、Ctrl + C で止める。
+
+仮想マシンからのログアウトは [vagrant@localhost...]$ exit => 仮装マシンからMacに、操作が戻る。
+
+$ vagrant suspend => 仮想マシンを停止。
+
+何らかの原因でターミナルをそのまま閉じてしまったり、PC を終了させてしまったとしてもそれほど問題はないが、[ exit で仮装マシンからのログアウト > vagrant suspend で仮想マシン停止] が基本！
+
+$ vagrant suspend , $ vagrant status => saved (virtualbox) 
