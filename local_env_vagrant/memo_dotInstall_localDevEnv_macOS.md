@@ -58,6 +58,12 @@ vagrant init bento/centos-6.8 ：仮想マシンの設定をする Vagrantfile �
 
 Vagrantfile が作成されると以上のメッセージが出る。そして、ホームディレクトリに、 .vagrant.d/ という隠しフォルダが作られる。
 
+【参考】なお、bento/centos-x.x 部分は使用する Vagrant Box の名前。これは、Vagrant を提供する HashiCorp 社が同じく提供する、Atlas というサービスに登録されている Vagrant Box の名前を指定する。 https://atlas.hashicorp.com/boxes/search 
+
+ユーザ名/Vagrant Box 名 という規則になっており、bento は Chef 社がメンテナンスするオーガナイゼーション (ユーザ名)。Chef 社は「Chef」という構成管理ツールを展開している、信頼できる配布元といえる。
+
+参考 http://neos21.hatenablog.com/entry/2017/04/17/074117
+
 Vagrantfileを編集して仮想マシンのIPアドレスを192.168.33.10にする
 
 sed -i '' -e 's/# config.vm.network "private_network", ip: "192.168.33.10"/config.vm.network "private_network", ip: "192.168.33.10"/' Vagrantfile
@@ -88,6 +94,15 @@ CentOS 7 にするには最初に vagrant init で指定した「bento/centos-6.
 
 過去にそのディレクトリで sudo をつけて vagrant コマンドを実行してしまったため、ディレクトリの所有者の設定がおかしくなっていると推測されます。新しくディレクトリを作成して、そのディレクトリで改めてローカル開発環境を作り直してみてください。新しいローカル開発環境では sudo なしで vagrant up ができるかと思います。
 
+### vagrant up でエラー出てもビビらない
+
+一度、下のエラーが出て止まったが、再度 vagrant up すると何事もなかったかのように成功した。
+
+An error occurred while downloading the remote file. The error
+message, if any, is reproduced below. Please fix this error and try again.
+
+OpenSSL SSL_read: SSL_ERROR_SYSCALL, errno 60
+
 ### 仮装マシンの設定をする
 
 $ clear でターミナルの画面をクリア。
@@ -102,11 +117,11 @@ Vagrantfile のあるフォルダで vagrant ssh => 立ち上げたサーバー�
 
 [vagrant@localhost ~]$ sudo yum -y install git ：スクリプトを入手するための gitをインストール
 
-[vagrant@localhost ~]$ git clone https://github.com/dotinstallres/contos6.git ：gitを使ってアプリケーション設定用スクリプトをDL
+[vagrant@localhost ~]$ git clone https://github.com/dotinstallres/centos6.git ：gitを使ってアプリケーション設定用スクリプトをDL
 
 生成された centos6 フォルダに移動して、スクリプトを実行 >>> [vagrant... ~]$ ./run.sh 
 
-ネットワーク状況によっては、途中で止まったように見えることもある。エラーのようなものが出ても、taskが終了していればOK。
+ネットワーク状況によっては、途中で止まったように見えることもある。エラーのようなものが出ても、taskが終了していればOK。（macBookAirに、アパートのWi-Fiでは30分以上かかった。）
 
 [vagrant... ~]$ exec $SHELL -l ：最後に、もろもろの設定を反映させる。(-1ではない。エル)
 
@@ -123,8 +138,6 @@ https://github.com/dotinstallres/centos6/blob/master/main.yml
 仮想マシンの設定が終わったので、仮想マシン上のファイルを簡単に扱えるようにするファイル転送ツールを導入。今回は Cyberduck というフリーのツールを使う。公式サイト https://cyberduck.io/
 
 Cyberduck は Vagrant や VirtualBox と違ってインストーラーが付属しないので、Finder で表示してインストール作業を進める。zipファイルを展開してプログラム本体を取り出し、Application フォルダに移動。
-
-$ Cyberduck >>> -bash: Cyberduck: command not found （講座ではターミナルから Cyberduck で起動できると言うが。。。alias設定しないと無理だな）
 
 ### Cyberduck の設定
 
@@ -175,3 +188,39 @@ $ vagrant suspend => 仮想マシンを停止。
 何らかの原因でターミナルをそのまま閉じてしまったり、PC を終了させてしまったとしてもそれほど問題はないが、[ exit で仮装マシンからのログアウト > vagrant suspend で仮想マシン停止] が基本！
 
 $ vagrant suspend , $ vagrant status => saved (virtualbox) 
+
+### 学習再開の手順
+
+$ cd MyVagrant/MyCentOS ：仮想マシンのあるフォルダに移動。
+
+$ vagrant up ：仮想マシンが（停止していれば）起動。
+
+$ vagrant ssh ：仮装マシンにログイン。=> [vagrant@localhost ~]$ に変わる
+
+例えばrubyについて学習するため新規フォルダ ruby_lessons を作成。新規ファイル hello.rb を作成。[ puts "this is ruby" ]
+
+ターミナルで $ ruby hello.rb を実行して確認。
+
+### ファイル転送ツールTransmitを使ってみよう
+
+https://panic.com/blog/ja/hello-transmit-5/
+
+### hosts ファイルを編集する
+
+仮装マシーンの、数字だらけのアドレスに名前をつける。
+
+hosts（ホスツ）とは、TCP/IPを利用するコンピュータにおけるホスト名のデータベースで、IPアドレスとホスト名の対応を記述したテキストファイルである。(wikipedia)
+
+/etc/hosts に、新たな設定 192.168.33.10 dev.dotinstall.com を追記。（既にある設定は、いじらない！）
+
+$ php -S 192.168.33.10:8000 でPHPのウェブサーバーを立ち上げ、設定したURLにアクセス。
+
+これはあくまで、手元の開発環境にわかりやすい名前をつけるための設定。他のデバイスからはこのURLは通用しない。
+
+[!!! caution] なお、mvim で編集しようとすると、w! などでの強制保存も効かず、 $ sudo vi hosts で編集・保存ができた。
+
+### ポート番号 :8000 つけ忘れに注意（ユーザーからの質問）
+
+hosts ファイルを編集後、 Apache のテストページが表示されてしまいます。なぜでしょうか？
+
+URL の最後に「:8000」をつけ忘れているようです。 dev.dotinstall.com でなく dev.dotinstall.com:8000 にアクセスしてみてください。
