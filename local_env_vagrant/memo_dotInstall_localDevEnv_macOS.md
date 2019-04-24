@@ -102,7 +102,7 @@ Vagrantfile のあるフォルダで vagrant ssh => 立ち上げたサーバー�
 
 [vagrant@localhost ~]$ sudo yum -y install git ：スクリプトを入手するための gitをインストール
 
-[vagrant@localhost ~]$ git clone https://github.com/dotinstallres/contos6.git ：gitを使ってアプリケーション設定用スクリプトをDL
+[vagrant@localhost ~]$ git clone https://github.com/dotinstallres/centos6.git ：gitを使ってアプリケーション設定用スクリプトをDL
 
 生成された centos6 フォルダに移動して、スクリプトを実行 >>> [vagrant... ~]$ ./run.sh 
 
@@ -175,3 +175,32 @@ $ vagrant suspend => 仮想マシンを停止。
 何らかの原因でターミナルをそのまま閉じてしまったり、PC を終了させてしまったとしてもそれほど問題はないが、[ exit で仮装マシンからのログアウト > vagrant suspend で仮想マシン停止] が基本！
 
 $ vagrant suspend , $ vagrant status => saved (virtualbox) 
+
+### rubyの学習をするには
+
+ruby_lessons フォルダを作成。「 puts "hello, vagrant!" 」を保存 => hello.rb
+
+ruby hello.rb // rubyファイルを実行するとターミナルに表示される。
+
+### hosts ファイルの編集
+
+仮想マシンの数字だらけのアドレスにもう少しわかりやすい名前をつける方法。PHP の Web サーバーを立ち上げていて、ブラウザのほうで確認する時、例えば dev.dotinstall.com という名前をつけたかったとする。
+
+ホスト側で cd php_lessons // php_lessons/index.php に、dev.dotinstall.com でアクセスする設定
+
+$ cd /etc/ => hosts を編集
+
+設定はいじらないようにして、新しい設定を一番下に追加すれば OK
+
+192.168.33.10 dev.dotinstall.com
+
+それぞれを半角スペースで区切る。
+
+保存をする時、これはシステムファイルなので、Mac を設定したときのパスワードを入力する。
+
+※ /etc/hosts のパーミッションは 644。これを664 にchmodしても、brackets や mvim では書き込みできず。(w! も効かないのはなぜ？？) 
+結局、vi で編集して、保存後に644 に戻しておいた。
+
+設定ができたはずなので、ブラウザの数字の羅列の代わりに、こちらの dev.dotinstall.com が使える。dev.dotinstall.com:8000 としても同じ結果になっているのがわかる。
+
+ちなみにこちらの設定は、この Mac だけに有効。あくまで手元の開発環境にわかりやすい名前をつけるもの。
