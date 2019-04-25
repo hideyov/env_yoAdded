@@ -42,9 +42,46 @@ config.vm.network "private_network", ip: "192.168.33.11"
 
 同期 //
 
-host側：~/MyVagrant/MyCentOS
+host側：~/MyVagrant/myCentOSVM
 
 guest側：/vagrant
 
 同期している（guest側からVagrantfileにアクセスできるし、ファイル操作も同期している）
 
+### 3) myCentOSVM_2_default
+
+host側：$ MyVagrant/myCentOSVM_2
+
+guest側：MyCentOSMV_2_default
+
+Vagrantfile // 
+
+config.vm.box = "centos64"
+
+config.vm.network "private_network", ip: "192.168.33.12"
+
+/# config.vm.synced_folder "../data", "/vagrant_data" // 設定なし
+
+同期 //
+
+host側：~/MyVagrant/myCentOSVM_2
+
+guest側：/vagrant
+
+同期している（guest側からVagrantfileにアクセスできるし、ファイル操作も同期している）
+
+Provision //
+
+config.vm.provision "shell", :path => "provision.sh"
+
+provision.sh ::::::::::
+
+sudo yum -y install httpd
+
+sudo service httpd start
+
+sudo chkconfig httpd on
+
+::::::::::::::::::::::::
+
+[??? question] またもや ERR_EMPTY_RESPONSE // webサーバーが起動しているにもかかわらず、ブラウザに表示されない。
