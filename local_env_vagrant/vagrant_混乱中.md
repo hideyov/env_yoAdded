@@ -16,13 +16,15 @@ config.vm.network "private_network", ip: "192.168.33.10"
 
 /# config.vm.synced_folder "../data", "/vagrant_data" (設定なし)
 
-同期 //
+同期 // [??? question] host側の /MyCentOS とguest側の /vagrant が同期していない！
 
 host側：
 
 guest側：
 
 webサーバー //
+
+documentroot: /var/www/html
 
 [vagrant@localhost php_lessons]$ php -S 192.168.33.10:8000 => PHPが用意しているウェブサーバーが起動
 
@@ -48,11 +50,13 @@ guest側：/vagrant
 
 同期している（guest側からVagrantfileにアクセスできるし、ファイル操作も同期している）
 
-### 3) myCentOSVM_2_default
+documentroot: /var/www/html
 
-host側：$ MyVagrant/myCentOSVM_2
+### 3) myCentOSVM2_default
 
-guest側：MyCentOSMV_2_default
+host側：$ MyVagrant/myCentOSVM2
+
+guest側：MyCentOSMV2_default
 
 Vagrantfile // 
 
@@ -85,3 +89,5 @@ sudo chkconfig httpd on
 ::::::::::::::::::::::::
 
 [??? question] またもや ERR_EMPTY_RESPONSE // webサーバーが起動しているにもかかわらず、ブラウザに表示されない。
+
+
